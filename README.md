@@ -7,7 +7,7 @@
 ## 2. Import
 Depends: 
 
-       Python (>= 3.9.2)
+      Python (>= 3.9.2)
 
 Requirements: 
 
@@ -19,7 +19,12 @@ Requirements:
   
 ## 3. Quick start
 
-Run `iLR.py`. The parameters can be changed as below.
+Import `iLR.py`by 
+
+```python
+import iLR from iLR
+```
+The parameters can be changed as below.
 
 ### 3.1 Prepare data
 
@@ -27,34 +32,37 @@ An Anndata object can be accepted directly as input. `obs_names` corresponds to 
 
 Example of preparing data (from paper: https://www.science.org/doi/10.1126/science.aav8130, L4 cell type only):
 
-     info = pd.DataFrame(columns = ['train_ASD_number', 'train_control_number', 'num_genes_started','test_ASD_number', 'test_control_number'])
-     adata = L4
+```python
+info = pd.DataFrame(columns = ['train_ASD_number', 'train_control_number', 'num_genes_started','test_ASD_number', 'test_control_number'])
+adata = L4
 
-     sc.tl.rank_genes_groups(adata, groupby="diagnosis", method = 'wilcoxon')
-     df = sc.get.rank_genes_groups_df(adata, group="ASD")
-     selected = df[df['pvals_adj'] < 0.05]['names'].tolist()
-     info.at[0,'num_genes_started'] = len(selected)
+sc.tl.rank_genes_groups(adata, groupby="diagnosis", method = 'wilcoxon')
+df = sc.get.rank_genes_groups_df(adata, group="ASD")
+selected = df[df['pvals_adj'] < 0.05]['names'].tolist()
+info.at[0,'num_genes_started'] = len(selected)
 
-     X_all = adata.X
-     y_all = np.asarray(adata.obs["diagnosis"])
-     rs = ShuffleSplit(n_splits=1, test_size=0.3, random_state=0)
-     rs.get_n_splits(X_all, y_all)
-     train_index, test_index = next(rs.split(X_all, y_all)) 
-     train_adata = adata[train_index,:]
-     test_adata = adata[test_index,:]
+X_all = adata.X
+y_all = np.asarray(adata.obs["diagnosis"])
+rs = ShuffleSplit(n_splits=1, test_size=0.3, random_state=0)
+rs.get_n_splits(X_all, y_all)
+train_index, test_index = next(rs.split(X_all, y_all)) 
+train_adata = adata[train_index,:]
+test_adata = adata[test_index,:]
 
-     info.at[0,'train_ASD_number'] = np.sum(train_adata.obs['diagnosis'] == 'ASD')
-     info.at[0,'train_control_number'] = np.sum(train_adata.obs['diagnosis'] == 'Control')
-     info.at[0,'test_ASD_number'] = np.sum(test_adata.obs['diagnosis'] == 'ASD')
-     info.at[0,'test_control_number'] = np.sum(test_adata.obs['diagnosis'] == 'Control')
+info.at[0,'train_ASD_number'] = np.sum(train_adata.obs['diagnosis'] == 'ASD')
+info.at[0,'train_control_number'] = np.sum(train_adata.obs['diagnosis'] == 'Control')
+info.at[0,'test_ASD_number'] = np.sum(test_adata.obs['diagnosis'] == 'ASD')
+info.at[0,'test_control_number'] = np.sum(test_adata.obs['diagnosis'] == 'Control')
 
-     info
-     
-    |   train_ASD_number |   train_control_number |   num_genes_started |   test_ASD_number |   test_control_number |
-    |--------------------|------------------------|---------------------|-------------------|-----------------------|
-    |               2531 |                   2250 |                2941 |              1057 |                   993 |
+info
+```
+```text
+# output
+|   train_ASD_number |   train_control_number |   num_genes_started |   test_ASD_number |   test_control_number |
+|--------------------|------------------------|---------------------|-------------------|-----------------------|
+|               2531 |                   2250 |                2941 |              1057 |                   993 |
 
- 
+```
 Preprocessed demo data available at `\test_data`.
 
 ### 3.2 Run iLR
@@ -73,15 +81,19 @@ Preprocessed demo data available at `\test_data`.
 
  
  Run `iLR()`, then it will output an evaluation table containing AUCs and gene sets with different Pareto front penalties.
-      
-      counts, ev  = iLR(adata_train_filtered, adata_test_filtered, 'diagnosis',  ia = 0.1, e = [0, 1, 2], min_num = 10, plot = False)
-      ev
-     |   penalty |   train_mean_cv_acc |   train_mean_cv_auc |   number_selected_genes |   train_acc |   train_auc |   test_acc |   test_auc |
-     |-----------|---------------------|---------------------|-------------------------|-------------|-------------|------------|------------|
-     |         0 |            0.909224 |            0.972659 |                     314 |    0.942062 |    0.986966 |   0.830732 |   0.911936 |
-     |         1 |            0.828067 |            0.908705 |                      81 |    0.8379   |    0.917084 |   0.800976 |   0.881176 |
-     |         2 |            0.752351 |            0.831734 |                      25 |    0.756327 |    0.835111 |   0.745366 |   0.825654 |
 
+```python      
+counts, eval_table  = iLR(adata_train_filtered, adata_test_filtered, 'diagnosis',  ia = 0.1, e = [0, 1, 2], min_num = 10, plot = False)
+eval_table
+```
+```text
+# output
+|   penalty |   train_mean_cv_acc |   train_mean_cv_auc |   number_selected_genes |   train_acc |   train_auc |   test_acc |   test_auc |
+|-----------|---------------------|---------------------|-------------------------|-------------|-------------|------------|------------|
+|         0 |            0.909224 |            0.972659 |                     314 |    0.942062 |    0.986966 |   0.830732 |   0.911936 |
+|         1 |            0.828067 |            0.908705 |                      81 |    0.8379   |    0.917084 |   0.800976 |   0.881176 |
+|         2 |            0.752351 |            0.831734 |                      25 |    0.756327 |    0.835111 |   0.745366 |   0.825654 |
+```
 
 The evaluation table contains:
    
@@ -91,9 +103,12 @@ The evaluation table contains:
    - `train_acc/auc`: accuracy or AUC on training dataset
    - `test_acc/auc`: accuracy or AUC on testing dataset
 
-    counts[2]
-    
-    Counter({'SPDYE2': 1,
+```python
+counts[2]
+```
+```text
+# output
+Counter({'SPDYE2': 1,
          'GTF2H2': 1,
          'FAM73B': 1,
          'PELI2': 1,
@@ -118,7 +133,7 @@ The evaluation table contains:
          'RP11-159J3.1': 1,
          'NPAS4': 1,
          'ZNF208': 1})
-         
+```         
       
 If `num_repeats` > 1, the values in each sub-counter will show how many times a gene appears out of the number of repeats. The evaluation table will have results for each repeat. 
 
