@@ -15,25 +15,25 @@ import math
 def iLR(adata, test_adata, observation,
              num_repeats = 1, ia = 0.1, per_remove = 0.2, e = [0], min_num = 10,
              rs = 1, plot = True):
-      """
+    """
       
-      Args:
-              train_data (AnnData): Training set with pre-filtered genes with lognorm transformed gene expression stored in adata.X
-              test_data (AnnData):  Test set with pre-filtered genes with lognorm transformed expression stored in adata.X
-              observation (str): obs name of interest (i.e., treatments)
-              num_repeats (int): number of repeats of iLR (default: 1)
-              ia (float): L2 regularization parameter (default: 0.1)
-              per_remove (float): proportion of genes removed at each iteration of iLR (default: 0.2)
-              e (list of floats): penalty of Pareto Front (default: [0])
-              min_num (int): minimal number of genes desired in the final gene set (default: 10)
-              rs (int): random seed of logistic regression (default: 1)
-              plot (boolean): if plot the gene number vs classification AUC scatter plot (default: True)
+    Args:
+            train_data (AnnData): Training set with pre-filtered genes with lognorm transformed gene expression stored in adata.X
+            test_data (AnnData):  Test set with pre-filtered genes with lognorm transformed expression stored in adata.X
+            observation (str): obs name of interest (i.e., treatments)
+            num_repeats (int): number of repeats of iLR (default: 1)
+            ia (float): L2 regularization parameter (default: 0.1)
+            per_remove (float): proportion of genes removed at each iteration of iLR (default: 0.2)
+            e (list of floats): penalty of Pareto Front (default: [0])
+            min_num (int): minimal number of genes desired in the final gene set (default: 10)
+            rs (int): random seed of logistic regression (default: 1)
+            plot (boolean): if plot the gene number vs classification AUC scatter plot (default: True)
      
-     Returns:
-              Counter: Key as penalty value as counter of selected genes and number of appearances.
-              DataFrame: Evaluation table contains classification accuracies.
+    Returns:
+            Counter: Key as penalty value as counter of selected genes and number of appearances.
+            DataFrame: Evaluation table contains classification accuracies.
               
-     """
+    """
 
     sc.set_figure_params(figsize=(10, 6))
 
