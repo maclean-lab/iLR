@@ -19,12 +19,19 @@ Requirements:
   
 ## 3. Quick start
 
-Import `iLR.py`by 
+This repo has large data files tracked by Git LFS. Before cloning or pulling the repo, make sure you have Git LFS installed before `git clone`:
+
+```bash
+git lfs install
+```
+
+Make sure iLR.py is in the same folder as your working script, then import `iLR.py` by 
 
 ```python
-import iLR from iLR
+from iLR import iLR
 ```
 The parameters can be changed as below.
+
 
 ### 3.1 Prepare data
 
@@ -63,7 +70,7 @@ info
 |               2531 |                   2250 |                2941 |              1057 |                   993 |
 
 ```
-Preprocessed demo data available at `\test_data`.
+Preprocessed demo data available at `\test_data`()
 
 ### 3.2 Run iLR
 `iLR` returns a dictionary with penalty as key and corresponding dictionary of genes as values. Its inputs are listed below.
