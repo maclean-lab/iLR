@@ -12,8 +12,7 @@ import math
 
 
 
-def iLR(adata, test_adata, observation,
-             num_repeats = 1, ia = 0.1, per_remove = 0.2, e = [0], min_num = 10,
+def iLR(adata, test_adata, observation, num_repeats = 1, ia = 0.1, per_remove = 0.2, e = [0], min_num = 10,
              rs = 1, plot = True):
     """
       
@@ -51,7 +50,7 @@ def iLR(adata, test_adata, observation,
         scores = pd.DataFrame() 
         X_all = adata_filtered.X
         y_all = np.asarray(adata_filtered.obs[observation])
-        X_all, y_all = shuffle(X_all, y_all)
+        X_all, y_all = shuffle(X_all, y_all, random_state = 42)
         gene_list = []
         acc = []
         auc = []
@@ -94,7 +93,7 @@ def iLR(adata, test_adata, observation,
             adata_filtered = adata_filtered[:, gene_selected]
             X_all = adata_filtered.X
             y_all = np.asarray(adata_filtered.obs[observation])
-            X_all, y_all = shuffle(X_all, y_all)
+            X_all, y_all = shuffle(X_all, y_all, random_state = 42)
             
         max_auc = np.max(auc)
         min_ngene = np.min(n_gene)
